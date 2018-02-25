@@ -1,0 +1,9 @@
+class Main {
+  function void main() {
+    var Stacker stacker;
+    let stacker = Stacker.new();
+    do stacker.run();
+    do stacker.dispose();
+    return;
+  }
+}

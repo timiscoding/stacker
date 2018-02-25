@@ -1,0 +1,55 @@
+/** Implements drawing the games elements */
+
+class Drawer {
+  /** Draws the grid */
+  function void grid() {
+    var int x, y, i, j;
+    let x = 208;
+    let y = 226;
+    do Screen.setColor(true);
+
+    while (i < 8) {
+      do Screen.drawLine(x, 16, x, 226);
+      let x = x + 14;
+      let i = i + 1;
+    }
+
+    while (j < 16) {
+      do Screen.drawLine(208, y, 306, y);
+      let y = y - 14;
+      let j = j + 1;
+    }
+    return;
+  }
+
+  /** Draws a row given the block arrangement (row) and the level */
+  function void row(Array row, int level) {
+    var int col;
+    let col = 0;
+
+    while (col < Constants.COLS()) {
+      if (row[col]) {
+        do Drawer.block(col, level, true);
+      } else {
+        do Drawer.block(col, level, false);
+      }
+      let col = col + 1;
+    }
+    return;
+  }
+
+  /** Draws a block at an offset (xoff, yoff) to the bottom left block in
+   * black or white (isBlack)
+   */
+  function void block(int xoff, int yoff, boolean isBlack) {
+    var int i, addr, x, y;
+    let i = 0;
+    let addr = 16896;
+    let x = 210 + (xoff * 14);
+    let y = 214 - (yoff * 14);
+
+    do Screen.setColor(isBlack);
+    do Screen.drawRectangle(x, y, x + 10, y + 10);
+    return;
+  }
+}

@@ -1,0 +1,52 @@
+/**
+ * Implements the main menu of the game.
+ * The user presses 'p' to play and 'q' to quit.
+ */
+
+class Stacker {
+  field Array menuStr;
+  field boolean quit;
+  field int key;
+  field StackerGame game;
+
+  constructor Stacker new() {
+    let menuStr = Array.new(4);
+    let menuStr[0] = "S T A C K E R";
+    let menuStr[1] = "-------------";
+    let menuStr[2] = "Stack blocks by pressing SPACE to lock the row in place";
+    let menuStr[3] = "Press 'p' to play, 'q' to quit.";
+    return this;
+  }
+
+  method void run() {
+    while (~(key = Constants.KEY_Q())) {
+      do Screen.clearScreen();
+      do Output.moveCursor(10, 26);
+      do Output.printString(menuStr[0]);
+      do Output.moveCursor(11, 26);
+      do Output.printString(menuStr[1]);
+      do Output.moveCursor(13, 4);
+      do Output.printString(menuStr[2]);
+      do Output.moveCursor(15, 17);
+      do Output.printString(menuStr[3]);
+
+      while (key = 0) {
+        let key = Keyboard.keyPressed();
+      }
+
+      if (key = Constants.KEY_P()) {
+        do Screen.clearScreen();
+        let game = StackerGame.new();
+        do game.run();
+        do game.dispose();
+        let key = 0;
+      }
+    }
+    return;
+  }
+
+  method void dispose() {
+    do Memory.deAlloc(this);
+    return;
+  }
+}

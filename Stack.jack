@@ -1,0 +1,58 @@
+/**
+ * Models the stack as a 2D array
+ */
+
+class Stack {
+  field Array stack;
+
+  constructor Stack new() {
+    var int r;
+    let stack = Array.new(Constants.LEVELS());
+    let r = 0;
+
+    while (r < Constants.LEVELS()) {
+      let stack[r] = Array.new(Constants.COLS());
+      let r = r + 1;
+    }
+    return this;
+  }
+
+  /** Adds a new row to the stack, keeping only blocks that are stackable */
+  method int add(Array row, int level) {
+    var int blocksStacked, i;
+    var Array top, newTop;
+    let top = stack[level - 1];
+    let newTop = stack[level];
+    let i = 0;
+    let blocksStacked = 0;
+
+    if (level = 0) {
+      let newTop = stack[0];
+      while (i < Constants.COLS()) {
+        let newTop[i] = row[i];
+        let i = i + 1;
+      }
+      let blocksStacked = 3;
+    } else {
+      while (i < Constants.COLS()) {
+        let newTop[i] = top[i] & row[i];
+
+        if (newTop[i]) {
+          let blocksStacked = blocksStacked + 1;
+        }
+        let i = i + 1;
+      }
+    }
+    return blocksStacked;
+  }
+
+  method Array getRow(int level) {
+    return stack[level];
+  }
+
+  method void dispose() {
+    do Memory.deAlloc(this);
+    return;
+  }
+}
+

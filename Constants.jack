@@ -1,0 +1,26 @@
+class Constants {
+  /** number of columns in the game */
+  function int COLS() {
+    return 7;
+  }
+
+  /** number of levels in a game */
+  function int LEVELS() {
+    return 15;
+  }
+
+  /** ascii code for space key */
+  function int KEY_SPACE() {
+    return 32;
+  }
+
+  /** ascii code for P key */
+  function int KEY_P() {
+    return 80;
+  }
+
+  /** ascii code for Q key */
+  function int KEY_Q() {
+    return 81;
+  }
+}

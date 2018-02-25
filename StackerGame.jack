@@ -1,0 +1,91 @@
+/**
+ * Implements a stacker game.
+ * Stacker is an arcade game where the goal is to build a stack of blocks
+ * as high as possible. At each level, a row of blocks moves sideways and
+ * the user has to lock the blocks in place (using the SPACE key) and
+ * timing it so that it aligns with the previous level. Blocks that don't
+ * align are lost and if no blocks aligned at all, the player loses.
+ * As the levels increase, the blocks move faster making timing even more
+ * critical.
+ *
+ * Acts as the controller between moving the row, updating the stack, the
+ * game state and drawing to screen.
+ */
+
+class StackerGame {
+  field int level;
+  field MovingRow mover;
+  field Stack stack;
+  field boolean play;
+
+  constructor StackerGame new() {
+    let level = 0;
+    let mover = MovingRow.new();
+    let stack = Stack.new();
+    let play = true;
+    return this;
+  }
+
+  method void run() {
+    var char key;
+    var int blocks;
+    var String levelStr;
+    let levelStr = String.new(2);
+    do Drawer.grid();
+    do Output.moveCursor(21, 26);
+    do Output.printString("S T A C K E R");
+
+    while (play) {
+      do levelStr.setInt(level + 1);
+      do Output.moveCursor(1, 1);
+      do Output.printString("Level ");
+      do Output.printString(levelStr);
+      do Output.printString("/");
+      do Output.printInt(Constants.LEVELS());
+
+      while (~(key = Constants.KEY_SPACE())) {
+        let key = Keyboard.keyPressed();
+        do mover.move();
+        do Drawer.row(mover.getRow(), level);
+      }
+
+      while (key = Constants.KEY_SPACE()) {
+        let blocks = stack.add(mover.getRow(), level);
+        do Drawer.row(stack.getRow(level), level);
+
+        do gameState(blocks);
+        let key = 0;
+        do Sys.wait(1000);
+      }
+    }
+    return;
+  }
+
+  method void gameState(int blocks) {
+    if (blocks = 0) {
+      let play = false;
+      do Output.moveCursor(3, 1);
+      do Output.printString("You lost");
+      do Sys.wait(2000);
+    } else {
+      if (level = 14) {
+        let play = false;
+        do Output.moveCursor(3, 1);
+        do Output.printString("You win!");
+        do Sys.wait(2000);
+      } else {
+        let play = true;
+        let level = level + 1;
+        do mover.setLevel(level, blocks);
+      }
+    }
+    return;
+  }
+
+  method void dispose() {
+    do mover.dispose();
+    do stack.dispose();
+    do Memory.deAlloc(this);
+    return;
+  }
+}

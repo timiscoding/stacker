@@ -1,0 +1,97 @@
+/** Implements the row that moves sideways. */
+
+class MovingRow {
+  field int x; // starting index for blocks
+  field int delay; // block moving speed. smaller value is faster
+  field int direction; // 1 = move right, -1 = move left
+  field int time; // counter used to determine when to move the blocks
+  field int blocks; // number of blocks in the row
+  field Array row;
+
+  constructor MovingRow new() {
+    let delay = 1000;
+    let time = 0;
+    let direction = 1;
+    let row = Array.new(Constants.COLS());
+    do setRow(2, 3);
+    do setLevel(0, blocks);
+    return this;
+  }
+
+  /** set the number of blocks (aBlocks) starting from index (offset) in the row */
+  method void setRow(int offset, int aBlocks) {
+    var int i;
+    let i = 0;
+    let x = offset;
+    let blocks = aBlocks;
+
+    while (i < Constants.COLS()) {
+      if ((i > (x - 1)) & (i < (x + blocks))) {
+        let row[i] = true;
+      } else {
+        let row[i] = false;
+      }
+      let i = i + 1;
+    }
+    return;
+  }
+
+  method Array getRow() {
+    return row;
+  }
+
+  /** sets the moving speed and block starting position according to the new level */
+  method void setLevel(int level, int aBlocks) {
+    do setDelay(level);
+    do setRow(2, aBlocks);
+    return;
+  }
+
+  /** set the speed of the blocks given a level */
+  method void setDelay(int level) {
+    if (level = 1) {
+      let delay = 500;
+    }
+
+    if ((level > 1) & (level < 10)) {
+      let delay = delay - 43;
+    }
+
+    if (level = 10) {
+      let delay = 150;
+    }
+
+    if (level > 10) {
+      let delay = delay - 25;
+    }
+
+    return;
+  }
+
+  /** determines whether to move the blocks and where to move them */
+  method void move() {
+    if (time < delay) {
+      let time = time + 1;
+      return;
+    } else {
+      let time = 0;
+    }
+
+    if (x = (Constants.COLS() - blocks)) {
+      let direction = -1;
+    }
+
+    if (x = 0) {
+      let direction = 1;
+    }
+
+    let x = x + direction;
+    do setRow(x, blocks);
+    return;
+  }
+
+  method void dispose() {
+    do Memory.deAlloc(this);
+    return;
+  }
+}
